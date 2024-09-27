@@ -3,211 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Web</title>
+    <title>Music Web - Convertidor de Música</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #1c1c1e;
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
+            background: linear-gradient(to right, #3498db, #8e44ad); /* Fondo degradado */
+            color: #333;
+            position: relative;
+            overflow: hidden; /* Evita el desbordamiento del contenido */
         }
 
         .container {
-            background-color: #2c2c2e;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco semi-transparente */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             max-width: 400px;
+            width: 100%;
             text-align: center;
+            z-index: 1; /* Asegurar que el contenedor esté encima del fondo */
+            transition: all 0.3s ease; /* Transición suave */
+        }
+
+        #logo {
+            max-width: 180px; /* Aumentar el tamaño del logo */
+            height: auto;
+            margin-bottom: 20px; /* Espacio entre el logo y el título */
+            border: 5px solid transparent; /* Borde transparente para el degradado */
+            border-radius: 10px; /* Esquinas redondeadas para el borde */
+            background: linear-gradient(white, white), 
+                        linear-gradient(to right, #2980B9, #6DD5ED); /* Degradado */
+            background-clip: padding-box, border-box; /* Asegura que el degradado se muestre */
+            padding: 5px; /* Espaciado entre el borde y la imagen */
         }
 
         h1 {
-            color: #fff;
+            color: #2C3E50;
             font-size: 24px;
             margin-bottom: 20px;
         }
 
-        input[type="text"], input[type="url"] {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: none;
-            border-radius: 8px;
-            background-color: #3a3a3c;
-            color: #fff;
+        /* Menú hamburguesa */
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 10; /* Asegurar que el menú esté por encima del contenido */
+        }
+
+        .menu div {
+            width: 25px;
+            height: 3px;
+            background-color: #2980B9; /* Color de las rayas */
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Estilo del menú desplegable */
+        .nav-menu {
+            display: none;
+            position: absolute;
+            top: 50px; /* Espacio desde la parte superior */
+            right: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 10; /* Asegurar que el menú esté por encima del contenido */
+            padding: 10px;
+            transition: all 0.3s ease; /* Transición suave para el menú */
+        }
+
+        .nav-menu a {
+            text-decoration: none; /* Sin subrayado */
+            color: #2980B9; /* Color de enlace */
+            display: block; /* Hacer que cada enlace ocupe una línea completa */
+            padding: 10px 15px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            background-color: #ecf0f1; /* Color de fondo al pasar el mouse */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease; /* Transición suave para el formulario */
+        }
+
+        label {
+            text-align: left;
+            margin-bottom: 5px;
+            color: #34495E;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.2s ease; /* Transición para el borde */
+        }
+
+        input[type="text"]:focus {
+            border-color: #2980B9; /* Cambio de color en el borde al hacer foco */
         }
 
         button {
-            padding: 12px;
-            width: 100%;
-            background-color: #0a84ff;
+            background-color: #2980B9;
             color: white;
+            padding: 12px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            margin-bottom: 12px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #0067d3;
+            background-color: #3498DB;
         }
 
-        .playlist-item {
-            background-color: #3a3a3c;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-        }
-
-        .playlist-item a {
-            color: #0a84ff;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .playlist-item a:hover {
-            text-decoration: underline;
-        }
-
-        .remove-btn {
-            background-color: #ff3b30;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .remove-btn:hover {
-            background-color: #d32f2f;
-        }
-
-        /* Footer con sello de marca */
-        .footer {
+        p {
             margin-top: 20px;
             font-size: 12px;
-            color: #aaa;
-            text-align: center;
+            color: #888;
         }
 
-        /* Diseño responsive */
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
+        /* Marca de agua */
+        .watermark {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #BDC3C7;
+            text-align: center; /* Centrar la marca de agua */
+        }
 
-            input[type="text"], input[type="url"], button {
-                padding: 10px;
-                font-size: 14px;
-            }
+        /* Estilo para mensajes de estado */
+        .status-message {
+            margin-top: 20px;
+            color: #e74c3c; /* Color rojo para los mensajes de estado */
+            font-weight: bold;
+            background-color: #f8d7da; /* Fondo claro */
+            padding: 10px;
+            border-radius: 5px; /* Bordes redondeados */
+        }
+
+        /* Estilo para crear playlist */
+        .create-playlist, .view-playlist, .about {
+            display: none; /* Ocultar por defecto */
+            position: fixed; /* Fijo para centrar */
+            top: 50%; /* Centrar verticalmente */
+            left: 50%; /* Centrar horizontalmente */
+            transform: translate(-50%, -50%); /* Ajuste para centrar */
+            background-color: #ffffff; /* Fondo blanco */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra */
+            z-index: 100; /* Asegurar que esté encima del contenido */
+            transition: all 0.3s ease; /* Transición suave */
+        }
+
+        .create-playlist h2, .view-playlist h2, .about h2 {
+            color: #2C3E50; /* Color de encabezado */
+        }
+
+        .create-playlist input {
+            margin-bottom: 10px;
+        }
+
+        /* Estilo para el botón de cerrar */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            color: #e74c3c; /* Color de cerrar */
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #c0392b; /* Color más oscuro al pasar el mouse */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Music Web</h1>
-
-        <!-- Campo para el nombre de la canción -->
-        <input type="text" id="nameInput" placeholder="Nombre de la canción" />
-
-        <!-- Campo para añadir enlace de video -->
-        <input type="url" id="linkInput" placeholder="Ingresa el enlace del video" />
-        <button id="addButton">Agregar a la Playlist</button>
-
-        <!-- Lista de reproducción -->
-        <div id="playlistContainer"></div>
+    <div class="menu" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    
+    <div class="nav-menu" id="navMenu">
+        <a href="#" onclick="showPlaylist()">Mi Playlist</a>
+        <a href="#" onclick="showCreatePlaylist()">Crear Playlist</a>
+        <a href="#" onclick="showAbout()">Acerca de</a>
     </div>
 
-    <!-- Sello del creador -->
-    <div class="footer">
-        by: afcxx
+    <div class="container">
+        <img src="https://scontent.flim37-1.fna.fbcdn.net/v/t1.6435-9/68275635_2449157891797156_6796878212270915584_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=53a332&_nc_ohc=4im6GCiXAJ0Q7kNvgFD4ldI&_nc_ht=scontent.flim37-1.fna&_nc_gid=AUqmzTKZBTC0euw_ZLjYPIE&oh=00_AYC_xprqyejVlr-_xPTrIsqaAY_GUUND2hafzPDpUHoZfg&oe=671D91F3" alt="Logo" id="logo">
+        <h1>Music Web - Convertidor de Música</h1>
+
+        <form id="convertForm" method="POST" action="/convert">
+            <label for="url">Ingresa el enlace de YouTube:</label>
+            <input type="text" id="url" name="url" placeholder="https://www.youtube.com/..." required>
+            
+            <label for="filename">Nombre del archivo:</label>
+            <input type="text" id="filename" name="filename" placeholder="Nombre del archivo" required>
+            
+            <button type="submit">Convertir</button>
+        </form>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <!-- Ventana emergente para crear playlist -->
+        <div class="create-playlist" id="createPlaylist">
+            <button class="close-button" onclick="document.getElementById('createPlaylist').style.display='none'">✖</button>
+            <h2>Crear Playlist</h2>
+            <label for="playlistName">Nombre de la Playlist:</label>
+            <input type="text" id="playlistName" placeholder="Nombre de la Playlist" required>
+        </div>
+
+        <!-- Ventana emergente para ver playlist -->
+        <div class="view-playlist" id="viewPlaylist">
+            <button class="close-button" onclick="document.getElementById('viewPlaylist').style.display='none'">✖</button>
+            <h2>Mi Playlist</h2>
+            <p>Aquí podrás ver tus playlists.</p>
+        </div>
+
+        <!-- Ventana emergente de Acerca de -->
+        <div class="about" id="about">
+            <button class="close-button" onclick="document.getElementById('about').style.display='none'">✖</button>
+            <h2>Acerca de</h2>
+            <p>Esta aplicación es un proyecto en constante desarrollo, diseñado para facilitar la conversión de videos de YouTube a archivos de audio.</p>
+        </div>
+
+        <div class="watermark">
+            Derechos reservados by afcxx
+        </div>
     </div>
 
     <script>
-        const nameInput = document.getElementById('nameInput');
-        const linkInput = document.getElementById('linkInput');
-        const addButton = document.getElementById('addButton');
-        const playlistContainer = document.getElementById('playlistContainer');
-
-        // Cargar la playlist almacenada en localStorage
-        function loadPlaylist() {
-            const storedPlaylist = localStorage.getItem('playlist');
-            if (storedPlaylist) {
-                const playlist = JSON.parse(storedPlaylist);
-                playlist.forEach(item => {
-                    createPlaylistItem(item.name, item.link);
-                });
-            }
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.style.display = navMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Guardar la playlist en localStorage
-        function savePlaylist() {
-            const playlistItems = document.querySelectorAll('.playlist-item');
-            const playlist = [];
-
-            playlistItems.forEach(item => {
-                const name = item.querySelector('a').textContent;
-                const link = item.querySelector('a').href;
-                playlist.push({ name, link });
-            });
-
-            localStorage.setItem('playlist', JSON.stringify(playlist));
+        function showCreatePlaylist() {
+            document.getElementById('createPlaylist').style.display = 'block';
+            document.getElementById('viewPlaylist').style.display = 'none';
+            document.getElementById('about').style.display = 'none';
         }
 
-        // Función para crear un nuevo elemento de la playlist
-        function createPlaylistItem(name, link) {
-            const div = document.createElement('div');
-            div.classList.add('playlist-item');
-
-            const anchor = document.createElement('a');
-            anchor.href = link;
-            anchor.textContent = name || link;
-            anchor.target = '_blank';
-
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Eliminar';
-            removeButton.classList.add('remove-btn');
-            removeButton.addEventListener('click', () => {
-                playlistContainer.removeChild(div);
-                savePlaylist(); // Actualizar localStorage
-            });
-
-            div.appendChild(anchor);
-            div.appendChild(removeButton);
-            playlistContainer.appendChild(div);
+        function showPlaylist() {
+            document.getElementById('viewPlaylist').style.display = 'block';
+            document.getElementById('createPlaylist').style.display = 'none';
+            document.getElementById('about').style.display = 'none';
         }
 
-        // Añadir enlace a la playlist
-        addButton.addEventListener('click', () => {
-            const name = nameInput.value.trim();
-            const link = linkInput.value.trim();
-
-            if (!link) {
-                alert('Por favor, ingresa un enlace.');
-                return;
-            }
-
-            createPlaylistItem(name, link);
-            savePlaylist(); // Guardar en localStorage
-
-            nameInput.value = ''; // Limpiar el campo de nombre
-            linkInput.value = ''; // Limpiar el campo de enlace
-        });
-
-        // Cargar la playlist al iniciar la página
-        loadPlaylist();
+        function showAbout() {
+            document.getElementById('about').style.display = 'block';
+            document.getElementById('createPlaylist').style.display = 'none';
+            document.getElementById('viewPlaylist').style.display = 'none';
+        }
     </script>
 </body>
 </html>
